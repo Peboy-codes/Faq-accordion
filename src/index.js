@@ -32,7 +32,7 @@ function MyApp() {
   return (
     <main className="container">
       <Header />
-      <FaqList />
+      <Main />
     </main>
   );
 }
@@ -46,7 +46,7 @@ function Header() {
   );
 }
 
-function FaqList() {
+function Main() {
   return (
     <section>
       {queAns.map((que) => (
@@ -58,34 +58,35 @@ function FaqList() {
 
 function Question({ faqObject: { question, answer } }) {
   const [currentIcon, setIcon] = useState(plusIcon);
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleAnswer = () => {
+  const handleOnClick = () => {
     setIcon(currentIcon === plusIcon ? minusIcon : plusIcon);
-    setExpanded(!expanded);
   };
 
   const handleKeyDown = (e) => {
+    console.log(e.key);
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      toggleAnswer();
+      handleOnClick();
     }
   };
 
   return (
-    <details open={expanded}>
-      <summary
-        role="button"
-        aria-expanded={expanded}
-        onClick={toggleAnswer}
+    <div className="faq-box">
+      <h4>{question}</h4>
+      <img
+        className="icon"
+        src={currentIcon}
+        alt="icon plus"
+        onClick={handleOnClick}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-      >
-        <h2>{question}</h2>
-        <img src={currentIcon} alt={expanded ? "minus icon" : "plus icon"} />
-      </summary>
-      <p>{answer}</p>
-    </details>
+        role="button"
+        aria-expanded={currentIcon === minusIcon}
+      />
+      <p className={`answer ${currentIcon === plusIcon ? "hidden" : ""}`}>
+        {answer}
+      </p>
+    </div>
   );
 }
 
